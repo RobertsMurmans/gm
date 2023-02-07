@@ -2,11 +2,12 @@
 <head>
 </head>
 <body>
-    <canvas id="can" width="1000px" height="500px"></canvas>
+    <canvas id="can" width="1000px" height="500px" style="background-color: blue;"></canvas>
 
     <script>
         var ctx = canvas.getContext("2d");
         ctx.beginPath();
         ctx.arc(150, 150, 50, 0, Math.PI * 2);
+        ctx.stroke();
     </script>
 </body>
