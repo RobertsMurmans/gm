@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <head>
+    <script>
+        function fillCircle (x, y, radius, colour) {
+            ctx.beginPath();
+            ctx.fillStyle= colour;
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        function strokeCircle (x, y, radius, colour) {
+            ctx.beginPath();
+            ctx.fillStyle= colour;
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        var y_pos = 0;
+        var grav = 0;
+        function move(){
+            ctx.clearRect(0, 0, can.width, can.height);
+            y_pos = y_pos + grav;
+            if (grav < 20){
+                grav = grav + 0.2;
+            }
+            ctx.strokeRect(120, y_pos, 60, 60);
+        }
+        function up(){
+            grav = -8;
+        }
+    </script>
 </head>
 <body>
-    <canvas id="can" width="1000px" height="500px" style="background-color: blue;"></canvas>
+    <canvas id="can" width="1024px" height="512px" style="background-color: aquamarine;" onclick="up()"></canvas>
 
     <script>
-        var ctx = canvas.getContext("2d");
-        ctx.beginPath();
-        ctx.arc(150, 150, 50, 0, Math.PI * 2);
-        ctx.stroke();
+        var ctx = can.getContext("2d");
+        setInterval(move,10);
+
     </script>
+
 </body>
