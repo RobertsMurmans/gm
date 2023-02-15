@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <script>
+        
         function fillCircle (x, y, radius, colour) {
             ctx.beginPath();
             ctx.fillStyle= colour;
@@ -13,28 +14,52 @@
             ctx.arc(x, y, radius, 0, Math.PI * 2);
             ctx.stroke();
         }
-        var y_pos = 0;
+        var y_pos = 50;
         var grav = 0;
-        function move(){
-            ctx.clearRect(0, 0, can.width, can.height);
-            y_pos = y_pos + grav;
-            if (grav < 20){
-                grav = grav + 0.2;
-            }
-            ctx.strokeRect(120, y_pos, 60, 60);
+        var ingame = true;
+        function spawnPipe(){
+            
         }
-        function up(){
-            grav = -8;
+        function endGame(){
+            ctx.clearRect(0, 0, can.width, can.height);
+            ingame = false;
+            y_pos = 50;
+            grav = 0;
+            ctx.font="80px Arial";
+            ctx.fillText("Thanks for playing", 150, 200);
+            ctx.font="40px Comic-sans";
+            ctx.fillText("Click the screen to try again", 250, 330);
+        }
+        function move(){
+            if(ingame){
+                ctx.clearRect(0, 0, can.width, can.height);
+                y_pos = y_pos + grav;
+                if (grav < 20){
+                    grav = grav + 0.2;
+                }
+
+                ctx.strokeRect(120, y_pos, 45, 30);
+                if (y_pos <= 0 || y_pos >= can.height-30){
+                    endGame();
+                }
+            }
+        }
+        function clk(){
+            if(ingame){
+                grav = -6;
+            }
+            else{
+                ingame = true;
+            }
         }
     </script>
 </head>
 <body>
-    <canvas id="can" width="1024px" height="512px" style="background-color: aquamarine;" onclick="up()"></canvas>
+    <canvas id="can" width="1024px" height="512px" style="background-color: aquamarine;" onclick="clk()"></canvas>
 
     <script>
         var ctx = can.getContext("2d");
         setInterval(move,10);
-
     </script>
 
 </body>
