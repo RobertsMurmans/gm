@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <script>
+        var score = 0;                                          //keeps track of the score
         var y_pos = 50;                                         //y position
         var grav = 0;                                           //gravity
         var ingame = true;                                      //gamestate
@@ -20,6 +21,8 @@
             ctx.fillText("Thanks for playing", 150, 200);
             ctx.font="40px Comic-sans";
             ctx.fillText("Click the screen to try again", 250, 330);
+            ctx.font="20px Comic-sans";
+            ctx.fillText("Your score:"+score, 400,400);                 //shows your score(how many pipes you got past)
             pipe1[0]=can.width;                                         //reset the pipe vales for next game
             pipe1[1]=Math.floor(Math.random()*6+2)*can.height/10;
             pipe2[0]=can.width+333;
@@ -37,6 +40,7 @@
             if(pipe1[0]<=-50){                                              //if the pipe reaches the end of the screen, this resets it
                 pipe1[0]=can.width;
                 pipe1[1]=Math.floor(Math.random()*6+2)*can.height/10;
+                score++;
             }
 
             ctx.fillRect(pipe2[0],0,50,pipe2[1]);
@@ -46,6 +50,7 @@
             if(pipe2[0]<=-50){
                 pipe2[0]=can.width;
                 pipe2[1]=Math.floor(Math.random()*6+2)*can.height/10;
+                score++;
             }
 
             ctx.fillRect(pipe3[0],0,50,pipe3[1]);
@@ -55,6 +60,7 @@
             if(pipe3[0]<=-50){
                 pipe3[0]=can.width;
                 pipe3[1]=Math.floor(Math.random()*6+2)*can.height/10;
+                score++;
             }
 
         }
@@ -102,6 +108,9 @@
                 ingame = true;                                  //if the game is over is starts a new game
             }
         }
+        function MyKeyDownHandler (MyEvent) {                   //does the same as clk, but doesnt star a new game
+            if (MyEvent.keyCode == 32) {grav=-3;}
+        }
     </script>
 </head>
 <body>
@@ -110,5 +119,6 @@
     <script>
         var ctx = can.getContext("2d");
         setInterval(move,10);
+        addEventListener("keydown", MyKeyDownHandler);
     </script>
 </body>
