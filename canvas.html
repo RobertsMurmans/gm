@@ -1,76 +1,111 @@
 <!DOCTYPE html>
 <head>
     <script>
-        
-        function fillCircle (x, y, radius, colour) {
-            ctx.beginPath();
-            ctx.fillStyle= colour;
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        function strokeCircle (x, y, radius, colour) {
-            ctx.beginPath();
-            ctx.fillStyle= colour;
-            ctx.arc(x, y, radius, 0, Math.PI * 2);
-            ctx.stroke();
-        }
-        var y_pos = 50;
-        var grav = 0;
-        var ingame = true;
-        var ticks = 0;
-        var img = new Image();
-        var dist = 0;
-        var high = 50;
+        var y_pos = 50;                                         //y position
+        var grav = 0;                                           //gravity
+        var ingame = true;                                      //gamestate
+        var img = new Image();                                  //image
         img.src = "aeb0c496882b024731a21c506f778cf6.jpg"
-        function endGame(){
-            ctx.clearRect(0, 0, can.width, can.height);
+        var pipe1 = [1024,200];                                 //values for the pipes
+        var pipe2 = [1357,300];
+        var pipe3 = [1690,250];
+        
+        function endGame(){                                     //ends the game and resets everything
+            ctx.clearRect(0, 0, can.width, can.height);         //clears the screen
             ingame = false;
             y_pos = 50;
             grav = 0;
             ctx.font="80px Arial";
+            ctx.fillStyle= "black";
             ctx.fillText("Thanks for playing", 150, 200);
             ctx.font="40px Comic-sans";
             ctx.fillText("Click the screen to try again", 250, 330);
+            pipe1[0]=can.width;                                         //reset the pipe vales for next game
+            pipe1[1]=Math.floor(Math.random()*6+2)*can.height/10;
+            pipe2[0]=can.width+333;
+            pipe2[1]=Math.floor(Math.random()*6+2)*can.height/10;
+            pipe3[0]=can.width+666;
+            pipe3[1]=Math.floor(Math.random()*6+2)*can.height/10;
         }
-        function drawPipe(x,h){
-            ctx.fillRect(x,h,x-20,0)
-            ctx.fillRect(x,ctx.height-h,x-20,ctx.height)
+        function drawPipe(){                                    //draws pipes
+            ctx.fillStyle= "green";
+
+            ctx.fillRect(pipe1[0],0,50,pipe1[1]);                           //draws the pipe
+            ctx.fillRect(pipe1[0],can.height,50,pipe1[1]-can.height+100);
+            pipe1[0]=pipe1[0]-2;                                            //updates the position value for the next frame
+
+            if(pipe1[0]<=-50){                                              //if the pipe reaches the end of the screen, this resets it
+                pipe1[0]=can.width;
+                pipe1[1]=Math.floor(Math.random()*6+2)*can.height/10;
+            }
+
+            ctx.fillRect(pipe2[0],0,50,pipe2[1]);
+            ctx.fillRect(pipe2[0],can.height,50,pipe2[1]-can.height+100);
+            pipe2[0]=pipe2[0]-2;
+
+            if(pipe2[0]<=-50){
+                pipe2[0]=can.width;
+                pipe2[1]=Math.floor(Math.random()*6+2)*can.height/10;
+            }
+
+            ctx.fillRect(pipe3[0],0,50,pipe3[1]);
+            ctx.fillRect(pipe3[0],can.height,50,pipe3[1]-can.height+100);
+            pipe3[0]=pipe3[0]-2;
+
+            if(pipe3[0]<=-50){
+                pipe3[0]=can.width;
+                pipe3[1]=Math.floor(Math.random()*6+2)*can.height/10;
+            }
 
         }
-        function move(){
-            if(ingame){
-                ctx.clearRect(0, 0, can.width, can.height);
-                y_pos = y_pos + grav;
-                if (grav < 20){
-                    grav = grav + 0.2;
+        function checkPipe(){                                   //checks for colision with pipes
+            if(155>=pipe1[0]&&pipe1[0]>=120){                   //checks x value
+                if(y_pos<pipe1[1]||y_pos>pipe1[1]+80){          //checks height
+                    endGame();                                  //ends the game
                 }
-                drawPipe(dist,high);
-                dist++
-                high++
-                if (dist >= ctx.width){
-                    dist=0;
-                    high=100;
-                }
-
-                ctx.drawImage(img, 120, y_pos);
-                if (y_pos <= 0 || y_pos >= can.height-30){
+                
+            }
+            if(140>=pipe2[0]&&pipe2[0]>=50){
+                if(y_pos<pipe2[1]||y_pos>pipe2[1]+80){
                     endGame();
                 }
+                
+            }
+            if(140>=pipe3[0]&&pipe3[0]>=50){
+                if(y_pos<pipe3[1]||y_pos>pipe3[1]+80){
+                    endGame();
+                }
+                
+            }
+        }
+        function move(){                                        //screen updater
+            if(ingame){
+                ctx.clearRect(0, 0, can.width, can.height);     //clears the screen
+                y_pos = y_pos + grav;                           //updates the y position
+                if (grav < 20){
+                    grav = grav + 0.1;                          //updates the gravity value
+                }
+                ctx.drawImage(img, 120, y_pos);                 //draws the character on screen
+                if (y_pos <= 0 || y_pos >= can.height-30){
+                    endGame();                                  // if the character falls out of the map, end the game
+                }
+                drawPipe();                                     //draws and checks pipes
+                checkPipe();
 
             }
         }
-        function clk(){
+        function clk(){                                         //click action
             if(ingame){
-                grav = -6;
+                grav = -3;                                      //if the game is not over it moves the character up
             }
             else{
-                ingame = true;
+                ingame = true;                                  //if the game is over is starts a new game
             }
         }
     </script>
 </head>
 <body>
-    <canvas id="can" width="1024px" height="512px" style="background-color: aquamarine;" onclick="clk()"></canvas>
+    <canvas id="can" width="1024px" height="512px" style="background-color: royalblue;" onclick="clk()"></canvas>
 
     <script>
         var ctx = can.getContext("2d");
